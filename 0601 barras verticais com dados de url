@@ -95,47 +95,22 @@
 
     <script type="text/javascript">
       "use strict"
-      var dados = [40, 80, 96, 76, 23, 42, 32, 90, 11, 22, 14];
-      var largura = 400,
-          altura = 1000;
 
-      var svg = d3.select('#chart')
-                .append('svg')
-                .attr('width', largura)
-                .attr('height', altura);
+      var canvas = d3.select("body").append("svg")
+                    .attr("width", 800)
+                    .attr("height", 800)
 
-      /* Edite o código abaixo para criar um gráfico de barras horizontais
-       *
-       * Crie funções que a partir dos dados definem os atributos x, y, width
-       * e height dos retângulos que são as barras.
-       *
-       * Dica: você pode criar funções de dois parâmetros (function(d, i)) para
-       * isso, onde o primeiro (d) é o dado e o segundo (i) é o índice desse dado.
-       * O índice é importante para dizer onde a barra será desenhada, por exemplo.
-       * (Nem pense em fazer hardcoded :)).
-       */
-
-      svg.selectAll('rect')
-          .data(dados)
-          .enter()
-            .append('rect')
-              .attr('y', function(d, i){ return i * 30}) // e aqui
-              .attr('width', function(d){return d * 2 })
-              .attr('height', 20)
-              .text(function(d){return d;})
-              .transition()
-              .attr("width", function(d){return d * 2;})
-            ;
-      /* Mais dicas :
-       * - As barras ficam mais legíveis se não encostarem umas nas outras. Para isso
-       * a maneira mais fácil é diminuir um pouco a largura delas (como elas estao deitadas,
-       * é a altura).
-       * - Que tal deixar a barra com o mouse em cima (hover) em uma cor diferente?
-       * Lembra como lá no nosso primeiro exemplo.
-       * - Sua visualização funciona se mudarmos a altura, largura ou o tamanho do array, certo?
-       * Se ela tiver números mágicos, vamos chamar Dalton, Jorge e João!
-       * - O comprimento do array de dados é dados.length
-       */
+      d3.csv("alphabet.tsv", function(data){
+        canvas.selectAll("rect")
+              .data(data)
+              .enter()
+                    .append("rect")
+                    .attr("width", function(d){return d.valor})
+                    .attr("height", 30)
+                    .attr("fill", "blue")
+                    .attr("y", function(d, i){return i*50})
+      }
+      
 
     </script>
   </body>
