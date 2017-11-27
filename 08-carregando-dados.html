@@ -36,7 +36,13 @@
     "use strict"
 
     function desenhaBarras(dados) {
-      // Preencha aqui.
+      d3.selectAll("rect")
+            .data(data)
+            .enter()
+                  .append("rect")
+                  .attr("width", function(d){return d.valor})
+                  .attr("height", 30)
+                  .attr("y", function(d, i){return i*50})
     }
 
     d3.tsv('dados/alphabet.tsv', function(dados) {
