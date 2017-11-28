@@ -11,7 +11,7 @@
 <body>
   <div class="container">
     <div class="row">
-      <h2>Barras com dados findos de uma url</h2>
+      <h2>Visualização Boqueirao</h2>
     </div>
     <div class="row mychart" id="chart">
     </div>
@@ -35,36 +35,30 @@
   <script type="text/javascript">
     "use strict"
 
-    var width = 1200;
+    var width = 800;
     var height = 500;
     var canvas = d3.select("body").append("svg")
                     .attr("width", width)
                     .attr("height", height)
 
     var escala_x = d3.scaleLinear()  // crie uma função de escala linear
-                  .domain([0, 0.15])  // de um domínio de 1 a 5
-                  .rangeRound([5, height]);
-
+                  .domain([0, 0.13])  // de um domínio de 1 a 5
+                  .rangeRound([height -10, 25]);
     var color_scale = d3.scaleLinear()
                         .domain([0,0.13])
-                        .range(["#FF0000", "#228B22"]);
+                        .range(["blue", "red"]);
 
     function desenhaBarras(dados) {
 
-    var bars =  canvas.selectAll("rect")
+      canvas.selectAll("rect")
         .data(dados)
         .enter()
               .append("rect")
               .attr("width", 30 )
-              .attr("height", 0)
+              .attr("height", function(d){return 10+  escala_x(d.dez_percentil);})
               .attr("x", function(d, i){return i *40  + 50   ;})
-              .attr("y", function(d){return (height) - escala_x(d.valor);})
-              .attr("fill", function(d){return color_scale(d.valor)})
-
-      bars.transition()
-          .duration(1500)
-          .delay(500)
-          .attr("height", function(d){return escala_x(d.valor);})
+              .attr("y", function(d){return (height-25) - escala_x(d.dez_percentil);})
+              .attr("fill", function(d){return color_scale(d.dez_percentil)})
 
       canvas.selectAll("text")
             .data(dados)
@@ -72,30 +66,33 @@
                   .append("text")
                   .attr("width",100 )
                   .attr("x", function(d,i){return i *40  + 60   ;})
-                  .attr("y", 496)
-                  .attr("fill", "white")
-                  .text(function(d){return d.letra})
+                  .attr("y", 500)
+                  .attr("fill", "black")
+                  .text(function(d){return d.mes})
 
-     canvas.selectAll("numbers")
+     canvas.selectAll("text")
                   .data(dados)
                   .enter()
+                        .delay(1000)
                         .append("text")
                         .attr("width",100 )
-                        .attr("x", function(d,i){return i *40  + 50   ;})
-                        .attr("y", function(d){return height- escala_x(d.valor) - 5 ;})
+                        .attr("x", function(d,i){return i *40  + 60   ;})
+                        .attr("y", function(d){return 10+  escala_x(d.valor);})
                         .attr("fill", "black")
                         .text(function(d){return d.valor})
+
 
 
     }
 
 
 
-    d3.tsv('dados/alphabet.tsv', function(dados) {
+    d3.csv('boqueriao-por-mes.csv', function(dados) {
+      console.log("provavelmente acontece depois")
       desenhaBarras(dados);
     });
 
-
+    console.log("provavelmente acontece primeiro") // me apague quando entender.
 
     /*
     * Assim como a função d3.tsv, existe a d3.csv e a d3.json
