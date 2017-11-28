@@ -35,20 +35,50 @@
   <script type="text/javascript">
     "use strict"
 
+    var width = 800;
+    var height = 500;
     var canvas = d3.select("body").append("svg")
-                    .attr("width", 800)
-                    .attr("height", 800)
+                    .attr("width", width)
+                    .attr("height", height)
+
+    var escala_x = d3.scaleLinear()  // crie uma função de escala linear
+                  .domain([0, 0.13])  // de um domínio de 1 a 5
+                  .rangeRound([height -10, 25]);
+    var color_scale = d3.scaleLinear()
+                        .domain([0,0.13])
+                        .range(["blue", "red"]);
 
     function desenhaBarras(dados) {
+
       canvas.selectAll("rect")
         .data(dados)
         .enter()
               .append("rect")
-              .attr("width", function(d){return d.valor *1000;} )
-              .attr("height", 50)
-              .attr("x", function(d, i){return i *50;})
-              //.attr("y", 100})
-              .attr("fill", "blue")
+              .attr("width", 30 )
+              .attr("height", function(d){return 10+  escala_x(d.valor);})
+              .attr("x", function(d, i){return i *40  + 50   ;})
+              .attr("y", function(d){return (height-25) - escala_x(d.valor);})
+              .attr("fill", function(d){return color_scale(d.valor)})
+
+      canvas.selectAll("text")
+            .data(dados)
+            .enter()
+                  .append("text")
+                  .attr("width",100 )
+                  .attr("x", function(d,i){return i *40  + 60   ;})
+                  .attr("y", 500)
+                  .attr("fill", "black")
+                  .text(function(d){return d.letra})
+
+     canvas.selectAll("text")
+                  .data(dados)
+                  .enter()
+                        .append("text")
+                        .attr("width",100 )
+                        .attr("x", function(d,i){return i *40  + 60   ;})
+                        .attr("y", function(d){return 10+  escala_x(d.valor);})
+                        .attr("fill", "black")
+                        .text(function(d){return d.valor})
 
     }
 
