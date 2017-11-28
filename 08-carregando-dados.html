@@ -35,8 +35,21 @@
   <script type="text/javascript">
     "use strict"
 
+    var canvas = d3.select("body").append("svg")
+                    .attr("width", 800)
+                    .attr("height", 800)
+
     function desenhaBarras(dados) {
-      // Preencha aqui.
+      canvas.selectAll("rect")
+        .data(dados)
+        .enter()
+              .append("rect")
+              .attr("width", function(d){return d.valor *1000;} )
+              .attr("height", 50)
+              .attr("x", function(d, i){return i *50;})
+              //.attr("y", 100})
+              .attr("fill", "blue")
+
     }
 
     d3.tsv('dados/alphabet.tsv', function(dados) {
