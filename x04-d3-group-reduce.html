@@ -55,19 +55,19 @@
         operando nele. Objeto aninhado é isso:
       </p>
       <pre><code class="javascript">
-  d3.nest()               // nest -> queremos gerar um objeto aninhado
+  d3.nest()               // nest -> queremos gerar um objeto aninhado, acho é que um metodo
     .key(d => d.type)     // key  -> a chave será o atributo type de cada objeto
     .entries(gh_nazareno)      // entries -> a lista de objetos será essa
 
   // group by com duas chaves
   d3.nest()
-    .key(d => d.repo.name)
-    .key(d => d.type)
-    .entries(gh_nazareno)
+    .key(d => d.repo.name) // o nome vem como chave principal
+    .key(d => d.type) // o tipo vem como chave secundaria
+    .entries(gh_nazareno) // gh_nazareno será o objeto a ser analisado
 
   // que é diferente de
   d3.nest()
-    .key(d => d.type)
+    .key(d => d.type) // aqui o tipo vem antes do nome
     .key(d => d.repo.name)
     .entries(gh_nazareno)
       </code></pre>
@@ -80,14 +80,14 @@
   // pelo comprimento
   d3.nest()
     .key(d => d.type)
-    .rollup(v => v.length)
+    .rollup(v => v.length) // a sumarização acontece aqui, rollup é o nome dela
     .entries(gh_nazareno)
 
   // pela media de algo (popularidade por linguagem)
   d3.nest()
     .key(d => d.language)
-    .rollup(v => d3.mean(v, d => d.watchers))
-    .entries(repos_nazareno)
+    .rollup(v => d3.mean(v, d => d.watchers)) // mean == media, pode-se usar metodos na entrada do rollup
+    .entries(repos_nazareno) // aqui a lista de objetos ja mudou
       </code></pre>
       <p>
         Caso você precise transformar o resultado em um objeto, por exemplo para

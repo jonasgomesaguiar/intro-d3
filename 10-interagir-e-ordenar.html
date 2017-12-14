@@ -97,16 +97,16 @@
         function desenhaVis(dados, nomeDaColuna){
           // Qual dimensão estamos codificando nas colunas?
           var dimensaoSelecionada = nomeDaColuna;
-          dados = dados.filter(d => d.CAMPUS == 1)
-                       .map(function(d){
-                              return {nome_curto : d.UORG_LOTACAO.substring(18, 40),
+          dados = dados.filter(d => d.CAMPUS == 1) // usando filtro para pegar os cursos apenas do campus 1
+                       .map(function(d){ //função de map, mapeia os dados para as variaveis que escolhi
+                              return {nome_curto : d.UORG_LOTACAO.substring(18, 40), // recorta o nome para um nome menor
                                       Matrículas : +d.MATRICULAS,
                                       "Idade mediana" : +d.idade_mediana,
                                       "Professores 40h": +d["Professor 40h ou DE"],
                                       "Servidores tec/adm": +d.Outro
                                       }
                             })
-                       .sort((a, b) => a[dimensaoSelecionada] - b[dimensaoSelecionada])
+                       .sort((a, b) => a[dimensaoSelecionada] - b[dimensaoSelecionada]) //aqui está fazendo uma interseção
 
           var y = d3.scaleBand()
                      .domain(dados.map(d => d.nome_curto))
@@ -117,6 +117,9 @@
                     .domain([0, d3.max(dados, d => d[dimensaoSelecionada])])
                     .rangeRound([0, larguraMaxBarras]);
 
+          var color_scale = d3.scaleLinear()
+                    .domain([0,d3.max(dados, d => d[dimensaoSelecionada])])
+                    .range(["blue", "red"]);
           /*
            * Desenho inicial
            */
@@ -129,6 +132,7 @@
               .attr("y", d => y(d.nome_curto))
               .attr("height", y.bandwidth())
               .attr("class", "depto")
+              .attr("fill", function(d){return color_scale(d[dimensaoSelecionada])})
 
           grafico.selectAll("text")
             .data(dados)
@@ -193,6 +197,7 @@
               //.sort((a, b) => b[dimensao] - a[dimensao]) // necessario na hora de reordenar os retângulos
               .transition().duration(300).delay((d,i) => i * 20)
               .attr("width", d => escalaLargura(d[dimensao]))
+              .attr("fill", function(d){return color_scale(d[dimensaoSelecionada])})
 
           }
         }
